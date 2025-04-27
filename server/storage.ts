@@ -4,6 +4,26 @@ import {
   type Link, type InsertLink,
   type CompanyInfo, type InsertCompanyInfo
 } from "@shared/schema";
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { eq } from 'drizzle-orm';
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import ws from "ws";
+import * as schema from "@shared/schema";
+
+neonConfig.webSocketConstructor = ws;
+
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Did you forget to provision a database?",
+  );
+}
+
+export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const db = drizzle(pool, { schema });
+
+const PostgresSessionStore = connectPg(session);
 
 // modify the interface with any CRUD methods
 // you might need
@@ -28,153 +48,200 @@ export interface IStorage {
   // Appearance methods
   getAppearance(): Promise<any | undefined>;
   updateAppearance(settings: any): Promise<any>;
+  
+  // Session store
+  sessionStore: session.SessionStore;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private links: Map<number, Link>;
-  private companyInfoData: CompanyInfo | undefined;
-  private appearanceSettings: any | undefined;
-  
-  private userCurrentId: number;
-  private linkCurrentId: number;
+export class DatabaseStorage implements IStorage {
+  sessionStore: session.SessionStore;
   
   constructor() {
-    // Initialize maps and ids
-    this.users = new Map();
-    this.links = new Map();
-    this.userCurrentId = 1;
-    this.linkCurrentId = 1;
-    
-    // Seed admin user
-    this.createUser({
-      username: "admin",
-      password: "5a4d6f9a2f8ed5b8ae5f30c095d92b42.4a7fb24b5e9cc5184ec46f7686a365a9d09c63dffa0f92280b4cd7a4f63ebe2dfdb73cc2a5af8b9ff8b9a50c5a262c77cc8a6028e9cf0f51b7e87b83147cf2a5",
+    this.sessionStore = new PostgresSessionStore({ 
+      pool,
+      createTableIfMissing: true
     });
     
-    // Seed with default links
-    this.createLink({
-      title: "Instagram",
-      url: "https://instagram.com/varnora",
-      description: "Follow us on Instagram",
-      icon: "FaInstagram", 
-      iconBgColor: "bg-gradient-to-r from-purple-500 to-pink-500",
-      order: 1,
-      active: true
-    });
+    // Seed initial admin user if not exists
+    this.initializeAdminUser();
     
-    this.createLink({
-      title: "Website",
-      url: "https://varnora.com",
-      description: "Visit our Website",
-      icon: "FaGlobe",
-      iconBgColor: "bg-gradient-to-r from-blue-500 to-teal-400",
-      order: 2,
-      active: true
-    });
+    // Seed initial links if not exist
+    this.initializeLinks();
     
-    this.createLink({
-      title: "WhatsApp",
-      url: "https://wa.me/911234567890",
-      description: "Contact us on WhatsApp",
-      icon: "FaWhatsapp",
-      iconBgColor: "bg-gradient-to-r from-green-500 to-emerald-400",
-      order: 3,
-      active: true
-    });
+    // Seed company info if not exists
+    this.initializeCompanyInfo();
     
-    // Seed with default company info
-    this.companyInfoData = {
-      id: 1,
-      name: "Varnora",
-      slogan: "Premium Luxury Solutions",
-      about: "Varnora is a premium luxury brand offering high-quality products and services. We strive for excellence in everything we do.",
-      email: "info@varnora.com",
-      phone: "+91 123 456 7890",
-      address: "123 Luxury Avenue, Premium District, Delhi, India",
-      website: "https://varnora.com"
-    };
-    
-    // Seed with default appearance settings
-    this.appearanceSettings = {
-      id: 1,
-      primaryColor: "#D4AF37",
-      secondaryColor: "#B8860B",
-      backgroundColor: "#000000", 
-      textColor: "#FFFFFF",
-      fontFamily: "Cinzel",
-      animationEnabled: true,
-      particlesEnabled: true
-    };
+    // Seed appearance settings if not exists
+    this.initializeAppearance();
+  }
+  
+  private async initializeAdminUser() {
+    const existingAdmin = await this.getUserByUsername("admin");
+    if (!existingAdmin) {
+      await this.createUser({
+        username: "admin",
+        password: "5a4d6f9a2f8ed5b8ae5f30c095d92b42.4a7fb24b5e9cc5184ec46f7686a365a9d09c63dffa0f92280b4cd7a4f63ebe2dfdb73cc2a5af8b9ff8b9a50c5a262c77cc8a6028e9cf0f51b7e87b83147cf2a5", // varnora2025
+      });
+    }
+  }
+  
+  private async initializeLinks() {
+    const existingLinks = await this.getLinks();
+    if (existingLinks.length === 0) {
+      await this.createLink({
+        title: "Instagram",
+        url: "https://instagram.com/varnora",
+        description: "Follow us on Instagram",
+        icon: "FaInstagram", 
+        iconBgColor: "bg-gradient-to-r from-purple-500 to-pink-500",
+        order: 1,
+        active: true
+      });
+      
+      await this.createLink({
+        title: "Website",
+        url: "https://varnora.com",
+        description: "Visit our Website",
+        icon: "FaGlobe",
+        iconBgColor: "bg-gradient-to-r from-blue-500 to-teal-400",
+        order: 2,
+        active: true
+      });
+      
+      await this.createLink({
+        title: "WhatsApp",
+        url: "https://wa.me/911234567890",
+        description: "Contact us on WhatsApp",
+        icon: "FaWhatsapp",
+        iconBgColor: "bg-gradient-to-r from-green-500 to-emerald-400",
+        order: 3,
+        active: true
+      });
+    }
+  }
+  
+  private async initializeCompanyInfo() {
+    const existingInfo = await this.getCompanyInfo();
+    if (!existingInfo) {
+      await this.updateCompanyInfo({
+        name: "Varnora",
+        slogan: "Premium Luxury Solutions",
+        about: "Varnora is a premium luxury brand offering high-quality products and services. We strive for excellence in everything we do.",
+        email: "info@varnora.com",
+        phone: "+91 123 456 7890",
+        address: "123 Luxury Avenue, Premium District, Delhi, India",
+        website: "https://varnora.com"
+      });
+    }
+  }
+  
+  private async initializeAppearance() {
+    const existingAppearance = await this.getAppearance();
+    if (!existingAppearance) {
+      await this.updateAppearance({
+        primaryColor: "#D4AF37",
+        secondaryColor: "#B8860B",
+        backgroundColor: "#000000", 
+        textColor: "#FFFFFF",
+        fontFamily: "Cinzel",
+        animationEnabled: true,
+        particlesEnabled: true
+      });
+    }
   }
   
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
   
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
   
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.userCurrentId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
   
   // Link methods
   async getLinks(): Promise<Link[]> {
-    return Array.from(this.links.values())
-      .sort((a, b) => a.order - b.order);
+    const allLinks = await db.select().from(links);
+    return allLinks.sort((a, b) => a.order - b.order);
   }
   
   async getLink(id: number): Promise<Link | undefined> {
-    return this.links.get(id);
+    const [link] = await db.select().from(links).where(eq(links.id, id));
+    return link || undefined;
   }
   
   async createLink(link: InsertLink): Promise<Link> {
-    const id = this.linkCurrentId++;
-    const newLink: Link = { ...link, id };
-    this.links.set(id, newLink);
+    const [newLink] = await db.insert(links).values(link).returning();
     return newLink;
   }
   
   async updateLink(id: number, linkUpdate: Partial<InsertLink>): Promise<Link | undefined> {
-    const link = this.links.get(id);
-    if (!link) return undefined;
-    
-    const updatedLink = { ...link, ...linkUpdate };
-    this.links.set(id, updatedLink);
-    return updatedLink;
+    const [updatedLink] = await db
+      .update(links)
+      .set(linkUpdate)
+      .where(eq(links.id, id))
+      .returning();
+    return updatedLink || undefined;
   }
   
   async deleteLink(id: number): Promise<boolean> {
-    return this.links.delete(id);
+    const [deletedLink] = await db
+      .delete(links)
+      .where(eq(links.id, id))
+      .returning();
+    return !!deletedLink;
   }
   
   // Company Info methods
   async getCompanyInfo(): Promise<CompanyInfo | undefined> {
-    return this.companyInfoData;
+    const [info] = await db.select().from(companyInfo);
+    return info || undefined;
   }
   
   async updateCompanyInfo(info: InsertCompanyInfo): Promise<CompanyInfo> {
-    this.companyInfoData = { ...info, id: 1 };
-    return this.companyInfoData;
+    const existing = await this.getCompanyInfo();
+    
+    if (existing) {
+      const [updatedInfo] = await db
+        .update(companyInfo)
+        .set(info)
+        .where(eq(companyInfo.id, existing.id))
+        .returning();
+      return updatedInfo;
+    } else {
+      const [newInfo] = await db.insert(companyInfo).values(info).returning();
+      return newInfo;
+    }
   }
   
   // Appearance methods
   async getAppearance(): Promise<any | undefined> {
-    return this.appearanceSettings;
+    const [settings] = await db.select().from(appearance);
+    return settings || undefined;
   }
   
   async updateAppearance(settings: any): Promise<any> {
-    this.appearanceSettings = { ...settings, id: 1 };
-    return this.appearanceSettings;
+    const existing = await this.getAppearance();
+    
+    if (existing) {
+      const [updatedSettings] = await db
+        .update(appearance)
+        .set(settings)
+        .where(eq(appearance.id, existing.id))
+        .returning();
+      return updatedSettings;
+    } else {
+      const [newSettings] = await db.insert(appearance).values(settings).returning();
+      return newSettings;
+    }
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
