@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import VarnoraLogo from "@/components/VarnoraLogo";
 import ActualLogo from "@/components/ActualLogo";
 import LinkCard from "@/components/LinkCard";
@@ -9,10 +10,29 @@ import AdminLoginModal from "@/components/admin/AdminLoginModal";
 import { FaWhatsapp, FaGlobe, FaInstagram, FaLinkedinIn, FaEnvelope, FaMapMarkerAlt, FaUserShield } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Home() {
   const { toast } = useToast();
   const [showAdminModal, setShowAdminModal] = useState(false);
+  
+  // Fetch links data
+  const { data: links } = useQuery({
+    queryKey: ['/api/links'],
+    staleTime: 0, // Always consider the data stale, so it refetches when revisiting
+  });
+  
+  // Fetch company info data
+  const { data: companyInfo } = useQuery({
+    queryKey: ['/api/company-info'],
+    staleTime: 0,
+  });
+  
+  // Invalidate queries when component mounts to ensure fresh data
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['/api/links'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/company-info'] });
+  }, []);
   
   // Animation variants
   const container = {
@@ -70,69 +90,104 @@ export default function Home() {
         initial="hidden"
         animate="show"
       >
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaWhatsapp}
-            iconBgColor="bg-green-600"
-            title="WhatsApp"
-            description="Contact us directly"
-            href={SOCIAL_LINKS.whatsapp}
-          />
-        </motion.div>
-        
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaGlobe}
-            iconBgColor="bg-[#D4AF37]"
-            title="Company Website"
-            description="Visit our official website"
-            href={SOCIAL_LINKS.website}
-          />
-        </motion.div>
-        
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaInstagram}
-            iconBgColor="bg-gradient-to-tr from-purple-600 to-yellow-400"
-            title="Instagram"
-            description="Follow our creative journey"
-            href={SOCIAL_LINKS.instagram}
-          />
-        </motion.div>
-        
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaLinkedinIn}
-            iconBgColor="bg-blue-700"
-            title="LinkedIn"
-            description="Connect professionally"
-            href={SOCIAL_LINKS.linkedin}
-          />
-        </motion.div>
-        
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaEnvelope}
-            iconBgColor="bg-red-500"
-            title="Email Us"
-            description="Let's discuss your project"
-            href={SOCIAL_LINKS.email}
-            onClick={() => {
-              navigator.clipboard.writeText("info@varnora.com");
-              copiedToast();
-            }}
-          />
-        </motion.div>
-        
-        <motion.div variants={item}>
-          <LinkCard
-            icon={FaMapMarkerAlt}
-            iconBgColor="bg-blue-500"
-            title="Business Location"
-            description="Find us on Google Maps"
-            href={SOCIAL_LINKS.location}
-          />
-        </motion.div>
+        {/* Display links from database if available, otherwise use default links */}
+        {links && links.length > 0 ? (
+          links.map((link) => (
+            <motion.div key={link.id} variants={item}>
+              <LinkCard
+                icon={
+                  link.type === 'whatsapp' ? FaWhatsapp :
+                  link.type === 'website' ? FaGlobe :
+                  link.type === 'instagram' ? FaInstagram :
+                  link.type === 'linkedin' ? FaLinkedinIn :
+                  link.type === 'email' ? FaEnvelope :
+                  link.type === 'location' ? FaMapMarkerAlt : FaGlobe
+                }
+                iconBgColor={
+                  link.type === 'whatsapp' ? "bg-green-600" :
+                  link.type === 'website' ? "bg-[#D4AF37]" :
+                  link.type === 'instagram' ? "bg-gradient-to-tr from-purple-600 to-yellow-400" :
+                  link.type === 'linkedin' ? "bg-blue-700" :
+                  link.type === 'email' ? "bg-red-500" :
+                  link.type === 'location' ? "bg-blue-500" : "bg-[#D4AF37]"
+                }
+                title={link.title}
+                description={link.description}
+                href={link.url}
+                onClick={link.type === 'email' ? () => {
+                  navigator.clipboard.writeText(link.url.replace('mailto:', ''));
+                  copiedToast();
+                } : undefined}
+              />
+            </motion.div>
+          ))
+        ) : (
+          <>
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaWhatsapp}
+                iconBgColor="bg-green-600"
+                title="WhatsApp"
+                description="Contact us directly"
+                href={SOCIAL_LINKS.whatsapp}
+              />
+            </motion.div>
+            
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaGlobe}
+                iconBgColor="bg-[#D4AF37]"
+                title="Company Website"
+                description="Visit our official website"
+                href={SOCIAL_LINKS.website}
+              />
+            </motion.div>
+            
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaInstagram}
+                iconBgColor="bg-gradient-to-tr from-purple-600 to-yellow-400"
+                title="Instagram"
+                description="Follow our creative journey"
+                href={SOCIAL_LINKS.instagram}
+              />
+            </motion.div>
+            
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaLinkedinIn}
+                iconBgColor="bg-blue-700"
+                title="LinkedIn"
+                description="Connect professionally"
+                href={SOCIAL_LINKS.linkedin}
+              />
+            </motion.div>
+            
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaEnvelope}
+                iconBgColor="bg-red-500"
+                title="Email Us"
+                description="Let's discuss your project"
+                href={SOCIAL_LINKS.email}
+                onClick={() => {
+                  navigator.clipboard.writeText("info@varnora.com");
+                  copiedToast();
+                }}
+              />
+            </motion.div>
+            
+            <motion.div variants={item}>
+              <LinkCard
+                icon={FaMapMarkerAlt}
+                iconBgColor="bg-blue-500"
+                title="Business Location"
+                description="Find us on Google Maps"
+                href={SOCIAL_LINKS.location}
+              />
+            </motion.div>
+          </>
+        )}
       </motion.main>
 
       {/* Admin access button */}
@@ -163,12 +218,11 @@ export default function Home() {
           <div className="h-0.5 w-20 gold-gradient rounded-full"></div>
         </div>
         <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B] mb-4 text-center title-font">
-          About Varnora
+          {companyInfo?.name ? companyInfo.name : "About Varnora"}
         </h2>
         <p className="text-lg text-white/80 leading-relaxed text-center body-font">
-          Varnora specializes in crafting distinctive web experiences and creative designs that blend aesthetics with functionality. 
-          Our passion lies in transforming ideas into digital realities that not only look stunning but also perform exceptionally.
-          With an eye for detail and commitment to excellence, we deliver solutions that truly speak to your audience.
+          {companyInfo?.description ? companyInfo.description : 
+            "Varnora specializes in crafting distinctive web experiences and creative designs that blend aesthetics with functionality. Our passion lies in transforming ideas into digital realities that not only look stunning but also perform exceptionally. With an eye for detail and commitment to excellence, we deliver solutions that truly speak to your audience."}
         </p>
         <div className="flex justify-center mt-4">
           <div className="h-0.5 w-20 gold-gradient rounded-full"></div>
