@@ -34,7 +34,7 @@ export default function LinkCard({
 
   return (
     <motion.div
-      className="link-card glass-card rounded-lg overflow-hidden cursor-pointer gold-shine"
+      className="link-card rounded-lg overflow-hidden cursor-pointer"
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -44,24 +44,29 @@ export default function LinkCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center p-4">
+      <div className="relative flex items-center p-5 bg-black/70 border border-[#D4AF37]/30 rounded-lg overflow-hidden">
+        {/* Gold shimmer effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1500 ease-in-out"></div>
+        
         <div
-          className={`${iconBgColor} rounded-full p-3.5 flex items-center justify-center mr-4 transition-all duration-300 ease-in-out shadow-md ${
-            isHovered ? "scale-110 shadow-lg shadow-[#D4AF37]/20" : ""
+          className={`${iconBgColor} rounded-full p-4 flex items-center justify-center mr-5 transition-all duration-300 ease-in-out shadow-md ${
+            isHovered ? "scale-110 shadow-lg shadow-[#D4AF37]/30" : ""
           }`}
         >
-          <Icon size={24} className="text-white" />
+          <Icon size={26} className="text-white" />
         </div>
+        
         <div className="flex-1">
-          <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B] title-font">
+          <h3 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B] title-font">
             {title}
           </h3>
-          <p className="text-sm text-white/80 max-w-[200px] truncate">
+          <p className="text-sm text-white/80 body-font">
             {description}
           </p>
         </div>
+        
         <motion.div
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-black"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-black shadow-lg shadow-[#D4AF37]/20"
           animate={{ 
             x: isHovered ? 0 : 10, 
             opacity: isHovered ? 1 : 0,
@@ -69,7 +74,7 @@ export default function LinkCard({
           }}
           transition={{ duration: 0.2 }}
         >
-          <span className="font-bold">→</span>
+          <span className="font-bold text-lg">→</span>
         </motion.div>
       </div>
     </motion.div>
