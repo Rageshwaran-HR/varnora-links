@@ -51,42 +51,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center pt-8 px-4 sm:px-6 lg:px-8 relative z-10">
-      {/* Header */}
-      <motion.header 
-        className="flex flex-col items-center w-full max-w-2xl mb-4"
-        variants={headerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* 3D Logo */}
-        <motion.div 
-          className="mb-8"
-          variants={item}
-        >
-          <VarnoraLogo size="lg" animated={true} glowEffect={true} />
-        </motion.div>
-        
-        <motion.h1 
-          className="text-5xl md:text-6xl font-bold tracking-tight text-center mb-8 gold-text-shadow title-font"
-          variants={item}
-        >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B]">
-            VARNORA
-          </span>
-        </motion.h1>
-        
-        <motion.p 
-          className="text-xl text-center mb-10 max-w-xl tracking-wide text-white/80 body-font leading-relaxed"
-          variants={item}
-        >
-          Web Development & Creative Design – <i>Design That Speaks</i>
-        </motion.p>
-        
-        <motion.div 
-          className="h-1 w-32 gold-gradient rounded-full mb-12"
-          variants={item}
-        />
-      </motion.header>
+      
 
       {/* V Logo for Links Section */}
       <motion.div
