@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
 import { openLink } from "@/lib/utils";
 
 interface LinkCardProps {
-  icon: IconType;
+  icon: ReactNode;
   iconBgColor: string;
   title: string;
   description: string;
@@ -13,7 +13,7 @@ interface LinkCardProps {
 }
 
 export default function LinkCard({
-  icon: Icon,
+  icon,
   iconBgColor,
   title,
   description,
@@ -53,7 +53,7 @@ export default function LinkCard({
             isHovered ? "scale-110 shadow-lg shadow-[#D4AF37]/30" : ""
           }`}
         >
-          <Icon size={26} className="text-white" />
+          {icon}
         </div>
         
         <div className="flex-1">

@@ -8,6 +8,7 @@ import { SOCIAL_LINKS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import AdminLoginModal from "@/components/admin/AdminLoginModal";
 import { FaWhatsapp, FaGlobe, FaInstagram, FaLinkedinIn, FaEnvelope, FaMapMarkerAlt, FaUserShield } from "react-icons/fa";
+import * as Icons from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { queryClient } from "@/lib/queryClient";
@@ -69,6 +70,13 @@ export default function Home() {
     });
   };
 
+  // Helper function to get icon component
+  const renderIconComponent = (iconName: string) => {
+    // @ts-ignore - using dynamic import from react-icons/fa
+    const IconComponent = Icons[iconName];
+    return IconComponent ? <IconComponent size={26} className="text-white" /> : <Icons.FaGlobe size={26} className="text-white" />;
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center pt-8 px-4 sm:px-6 lg:px-8 relative z-10">
       
@@ -95,26 +103,12 @@ export default function Home() {
           links.map((link) => (
             <motion.div key={link.id} variants={item}>
               <LinkCard
-                icon={
-                  link.type === 'whatsapp' ? FaWhatsapp :
-                  link.type === 'website' ? FaGlobe :
-                  link.type === 'instagram' ? FaInstagram :
-                  link.type === 'linkedin' ? FaLinkedinIn :
-                  link.type === 'email' ? FaEnvelope :
-                  link.type === 'location' ? FaMapMarkerAlt : FaGlobe
-                }
-                iconBgColor={
-                  link.type === 'whatsapp' ? "bg-green-600" :
-                  link.type === 'website' ? "bg-[#D4AF37]" :
-                  link.type === 'instagram' ? "bg-gradient-to-tr from-purple-600 to-yellow-400" :
-                  link.type === 'linkedin' ? "bg-blue-700" :
-                  link.type === 'email' ? "bg-red-500" :
-                  link.type === 'location' ? "bg-blue-500" : "bg-[#D4AF37]"
-                }
+                icon={renderIconComponent(link.icon)}
+                iconBgColor={link.iconBgColor || "bg-[#D4AF37]"}
                 title={link.title}
                 description={link.description}
                 href={link.url}
-                onClick={link.type === 'email' ? () => {
+                onClick={link.icon === 'FaEnvelope' ? () => {
                   navigator.clipboard.writeText(link.url.replace('mailto:', ''));
                   copiedToast();
                 } : undefined}
