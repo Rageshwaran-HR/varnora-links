@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Plus, Trash2, Edit, ExternalLink, ArrowUp, ArrowDown } from "lucide-react";
+import { Loader2, Plus, Trash2, Edit, ExternalLink, ArrowUp, ArrowDown, Link as LinkIcon } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import VarnoraLogo from "@/components/VarnoraLogo";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -327,29 +328,47 @@ export default function LinksPage() {
       <AdminSidebar />
       <div className="flex-1 p-8 overflow-y-auto bg-black/90">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold gold-text">Manage Links</h1>
-              <p className="text-gray-400 mt-1">
-                Add, edit, or remove links that appear on your landing page.
-              </p>
+          <div className="bg-gradient-to-r from-black/80 to-black/40 border border-gray-800 rounded-xl p-6 mb-8 shadow-xl">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="flex items-center space-x-4 mb-4 md:mb-0">
+                <div className="hidden md:block">
+                  <VarnoraLogo size="sm" animated={false} />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold gold-text">Manage Links</h1>
+                  <p className="text-gray-400 mt-1">
+                    Add, edit, or remove links that appear on your landing page.
+                  </p>
+                </div>
+              </div>
+              <Button 
+                onClick={() => setIsAddDialogOpen(true)}
+                className="gold-gradient-btn"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Link
+              </Button>
             </div>
-            <Button 
-              onClick={() => setIsAddDialogOpen(true)}
-              className="gold-gradient-btn"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add New Link
-            </Button>
           </div>
 
-          <Card className="bg-black/60 border-gray-800">
-            <CardHeader>
-              <CardTitle>Social Links</CardTitle>
-              <CardDescription>
-                Manage your social media and other important links.
-              </CardDescription>
+          <Card className="bg-gradient-to-b from-black/60 to-black/40 border-gray-800 shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl gold-text flex items-center">
+                    <LinkIcon className="mr-2 h-5 w-5 gold-text" />
+                    Social Links
+                  </CardTitle>
+                  <CardDescription className="text-gray-400 mt-1">
+                    Manage your social media and other important links.
+                  </CardDescription>
+                </div>
+                <div className="hidden md:block">
+                  <VarnoraLogo size="sm" animated={true} />
+                </div>
+              </div>
             </CardHeader>
+            <Separator className="bg-gray-800" />
             <CardContent>
               {links && links.length > 0 ? (
                 <Table>
@@ -394,7 +413,7 @@ export default function LinksPage() {
                               {getIconComponent(link.icon)}
                             </div>
                             <div>
-                              <div className="font-medium">{link.title}</div>
+                              <div className="font-medium gold-text">{link.title}</div>
                               <div className="text-sm text-gray-500">{link.description}</div>
                             </div>
                           </div>
@@ -466,11 +485,17 @@ export default function LinksPage() {
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="bg-black/90 border-gray-800 max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add New Link</DialogTitle>
-            <DialogDescription>
-              Add a new link to your profile page.
-            </DialogDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="gold-text text-xl">Add New Link</DialogTitle>
+                <DialogDescription>
+                  Add a new link to your profile page.
+                </DialogDescription>
+              </div>
+              <VarnoraLogo size="sm" animated={false} />
+            </div>
           </DialogHeader>
+          <Separator className="bg-gray-800 my-2" />
           
           <Form {...addForm}>
             <form onSubmit={addForm.handleSubmit(onAddSubmit)} className="space-y-6">
@@ -679,11 +704,17 @@ export default function LinksPage() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="bg-black/90 border-gray-800 max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Link</DialogTitle>
-            <DialogDescription>
-              Update the details of this link.
-            </DialogDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="gold-text text-xl">Edit Link</DialogTitle>
+                <DialogDescription>
+                  Update the details of this link.
+                </DialogDescription>
+              </div>
+              <VarnoraLogo size="sm" animated={false} />
+            </div>
           </DialogHeader>
+          <Separator className="bg-gray-800 my-2" />
           
           <Form {...editForm}>
             <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6">
