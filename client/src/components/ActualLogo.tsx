@@ -73,7 +73,7 @@ export default function ActualLogo({
             alt="Varnora Logo" 
             className="w-full h-full object-contain rounded-full"
           />
-          <span className="mt-2 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B]">
+          <span className="mt-4 mb-6 text-2xl font-extrabold title-font tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B]">
             VARNORA
           </span>
         </div>
