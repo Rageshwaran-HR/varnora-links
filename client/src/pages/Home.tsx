@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import VarnoraLogo from "@/components/VarnoraLogo";
-import LuxuryVLogo from "@/components/LuxuryVLogo";
+import ActualLogo from "@/components/ActualLogo";
 import LinkCard from "@/components/LinkCard";
 import { SOCIAL_LINKS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
@@ -95,7 +95,7 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <LuxuryVLogo size="md" animated={true} glowEffect={true} />
+        <ActualLogo size="lg" animated={true} glowEffect={true} />
       </motion.div>
       
       {/* Links */}
