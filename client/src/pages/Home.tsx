@@ -17,13 +17,13 @@ export default function Home() {
   const [showAdminModal, setShowAdminModal] = useState(false);
   
   // Fetch links data
-  const { data: links } = useQuery({
+  const { data: links = [] } = useQuery<any[]>({
     queryKey: ['/api/links'],
     staleTime: 0, // Always consider the data stale, so it refetches when revisiting
   });
   
   // Fetch company info data
-  const { data: companyInfo } = useQuery({
+  const { data: companyInfo } = useQuery<any>({
     queryKey: ['/api/company-info'],
     staleTime: 0,
   });
