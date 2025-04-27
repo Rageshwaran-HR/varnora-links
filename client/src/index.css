@@ -49,6 +49,9 @@
     font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
     background-color: var(--darker-bg);
+    background-image: 
+      linear-gradient(to right, rgba(10, 10, 10, 0.9), rgba(0, 0, 0, 1), rgba(10, 10, 10, 0.9)),
+      radial-gradient(circle at center, rgba(30, 30, 30, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
   }
 
   h1, h2, h3, h4, h5, h6 {

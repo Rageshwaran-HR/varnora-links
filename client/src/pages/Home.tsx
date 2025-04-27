@@ -50,10 +50,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="min-h-screen flex flex-col items-center pt-8 px-4 sm:px-6 lg:px-8 relative z-10">
       {/* Header */}
       <motion.header 
-        className="flex flex-col items-center w-full max-w-2xl mb-10 pt-4"
+        className="flex flex-col items-center w-full max-w-2xl mb-4"
         variants={headerVariants}
         initial="hidden"
         animate="visible"
