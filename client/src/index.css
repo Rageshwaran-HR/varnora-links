@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 100%;
+  --muted: 0 0% 20%;
+  --muted-foreground: 0 0% 70%;
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 100%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --primary: 46 80% 52%;  /* Gold */
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 46 80% 52%;
+  --accent-foreground: 0 0% 4%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 46 80% 52%;
+  --radius: 0.5rem;
+
+  /* Gold variants */
+  --gold-light: 46 83% 75%;
+  --gold-dark: 43 74% 39%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-opacity-5 bg-white backdrop-blur-md border border-white/5 shadow-xl;
+  }
+
+  .gold-gradient {
+    @apply bg-gradient-to-r from-[#D4AF37] to-[#B8860B];
+  }
+
+  .gold-text {
+    @apply text-[#D4AF37];
+  }
+
+  .gold-text-shadow {
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  }
+  
+  .gold-glow {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+  }
+
+  .link-card {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .link-card:hover {
+    @apply transform -translate-y-1 shadow-lg shadow-[#D4AF37]/20;
+  }
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
