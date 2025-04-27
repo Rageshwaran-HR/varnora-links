@@ -50,15 +50,14 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, loginMutation, registerMutation } = useAuth();
 
   // Check if user is already logged in
   useEffect(() => {
-    const isAdmin = localStorage.getItem("varnora_admin") === "true";
-    if (isAdmin) {
+    if (user) {
       setLocation("/admin");
     }
-  }, [setLocation]);
+  }, [user, setLocation]);
 
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -83,49 +82,33 @@ export default function AuthPage() {
 
   // Handle login form submission
   const onLoginSubmit = (data: LoginFormValues) => {
-    setIsLoading(true);
-    
-    // For demo purposes - hardcoded credentials
-    // In a real application, this would be an API call
-    if (data.username === "admin" && data.password === "varnora2025") {
-      setTimeout(() => {
-        // Store admin auth in localStorage
-        localStorage.setItem("varnora_admin", "true");
-        
+    loginMutation.mutate(data, {
+      onSuccess: () => {
         toast({
           title: "Login successful",
           description: "Welcome to the admin dashboard",
         });
-        
         setLocation("/admin");
-        setIsLoading(false);
-      }, 1500);
-    } else {
-      setTimeout(() => {
-        toast({
-          title: "Login failed",
-          description: "Invalid username or password",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-      }, 1500);
-    }
+      }
+    });
   };
 
   // Handle register form submission
   const onRegisterSubmit = (data: RegisterFormValues) => {
-    setIsLoading(true);
+    const { username, password } = data;
     
-    // Simulate registration process
-    setTimeout(() => {
-      toast({
-        title: "Registration request sent",
-        description: "New registrations require admin approval",
-      });
-      
-      setIsLoading(false);
-      registerForm.reset();
-    }, 1500);
+    registerMutation.mutate({ username, password }, {
+      onSuccess: () => {
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created successfully.",
+        });
+        setLocation("/admin");
+      },
+      onError: () => {
+        registerForm.reset();
+      }
+    });
   };
 
   // Animation variants
@@ -210,9 +193,9 @@ export default function AuthPage() {
                       <Button 
                         type="submit" 
                         className="w-full gold-gradient-animated text-black font-semibold btn-3d py-6 shadow-lg"
-                        disabled={isLoading}
+                        disabled={loginMutation.isPending}
                       >
-                        {isLoading ? (
+                        {loginMutation.isPending ? (
                           <>
                             <div className="h-4 w-4 border-2 border-t-transparent border-black rounded-full animate-spin mr-2"></div>
                             Logging in...
@@ -328,9 +311,9 @@ export default function AuthPage() {
                       <Button 
                         type="submit" 
                         className="w-full gold-gradient-animated text-black font-semibold btn-3d py-6 shadow-lg"
-                        disabled={isLoading}
+                        disabled={registerMutation.isPending}
                       >
-                        {isLoading ? (
+                        {registerMutation.isPending ? (
                           <>
                             <div className="h-4 w-4 border-2 border-t-transparent border-black rounded-full animate-spin mr-2"></div>
                             Registering...
