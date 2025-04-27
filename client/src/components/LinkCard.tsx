@@ -1,5 +1,7 @@
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { IconType } from "react-icons";
+import { openLink } from "@/lib/utils";
 
 interface LinkCardProps {
   icon: IconType;
@@ -16,48 +18,56 @@ export default function LinkCard({
   title,
   description,
   href,
-  onClick
+  onClick,
 }: LinkCardProps) {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleClick = () => {
+    // Execute any custom onClick handler if provided
     if (onClick) {
-      e.preventDefault();
       onClick();
+    } else {
+      // Default behavior: open the link
+      openLink(href);
     }
   };
 
   return (
-    <a 
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.div
+      className="link-card glass-card rounded-lg overflow-hidden cursor-pointer gold-shine"
       onClick={handleClick}
-      className="link-card glass-effect rounded-xl py-4 px-5 flex items-center gap-4 hover:border-[#D4AF37] group w-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02, y: -5 }}
+      whileTap={{ scale: 0.98 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <span className={cn("w-10 h-10 flex items-center justify-center rounded-full text-white", iconBgColor)}>
-        <Icon className="text-xl" />
-      </span>
-      
-      <div className="flex-1">
-        <h3 className="font-medium group-hover:text-[#D4AF37] transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-400">
-          {description}
-        </p>
+      <div className="flex items-center p-4">
+        <div
+          className={`${iconBgColor} rounded-md p-3 flex items-center justify-center mr-4 transition-transform duration-300 ease-in-out ${
+            isHovered ? "scale-110" : ""
+          }`}
+        >
+          <Icon size={24} className="text-white" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold gold-text title-font">
+            {title}
+          </h3>
+          <p className="text-sm text-white/70 max-w-[200px] truncate">
+            {description}
+          </p>
+        </div>
+        <motion.div
+          className="gold-text text-xl font-bold"
+          animate={{ x: isHovered ? 0 : 10, opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          →
+        </motion.div>
       </div>
-      
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        className="h-5 w-5 text-[#D4AF37] opacity-70 group-hover:opacity-100 transition-opacity" 
-        viewBox="0 0 20 20" 
-        fill="currentColor"
-      >
-        <path 
-          fillRule="evenodd" 
-          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" 
-          clipRule="evenodd" 
-        />
-      </svg>
-    </a>
+    </motion.div>
   );
 }

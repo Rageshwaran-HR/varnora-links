@@ -13,31 +13,31 @@ export default function ParticleBackground() {
       window.particlesJS("particles-js", {
         particles: {
           number: {
-            value: 80,
+            value: 50,
             density: {
               enable: true,
               value_area: 800
             }
           },
           color: {
-            value: "#D4AF37"
+            value: ["#D4AF37", "#F5E7A3", "#B8860B"]
           },
           shape: {
-            type: "circle",
+            type: ["circle", "triangle", "polygon"],
             stroke: {
               width: 0,
               color: "#000000"
             },
             polygon: {
-              nb_sides: 5
+              nb_sides: 6
             }
           },
           opacity: {
             value: 0.3,
-            random: false,
+            random: true,
             anim: {
-              enable: false,
-              speed: 1,
+              enable: true,
+              speed: 0.5,
               opacity_min: 0.1,
               sync: false
             }
@@ -46,29 +46,29 @@ export default function ParticleBackground() {
             value: 3,
             random: true,
             anim: {
-              enable: false,
-              speed: 40,
+              enable: true,
+              speed: 2,
               size_min: 0.1,
               sync: false
             }
           },
           line_linked: {
             enable: true,
-            distance: 150,
+            distance: 180,
             color: "#D4AF37",
-            opacity: 0.2,
+            opacity: 0.15,
             width: 1
           },
           move: {
             enable: true,
-            speed: 2,
+            speed: 1.2,
             direction: "none",
-            random: false,
+            random: true,
             straight: false,
             out_mode: "out",
             bounce: false,
             attract: {
-              enable: false,
+              enable: true,
               rotateX: 600,
               rotateY: 1200
             }
@@ -119,9 +119,12 @@ export default function ParticleBackground() {
   }, []);
 
   return (
-    <div
-      id="particles-js"
-      className="fixed inset-0 w-full h-full z-0"
-    />
+    <>
+      <div
+        id="particles-js"
+        className="fixed inset-0 w-full h-full z-0"
+      />
+      <div className="fixed inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70 z-0 pointer-events-none" />
+    </>
   );
 }
