@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import VarnoraLogo from "@/components/VarnoraLogo";
+import LuxuryVLogo from "@/components/LuxuryVLogo";
 import LinkCard from "@/components/LinkCard";
 import { SOCIAL_LINKS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
@@ -87,6 +88,16 @@ export default function Home() {
         />
       </motion.header>
 
+      {/* V Logo for Links Section */}
+      <motion.div
+        className="flex justify-center mb-8"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <LuxuryVLogo size="md" animated={true} glowEffect={true} />
+      </motion.div>
+      
       {/* Links */}
       <motion.main 
         className="w-full max-w-xl space-y-4 mb-12"

@@ -46,26 +46,30 @@ export default function LinkCard({
     >
       <div className="flex items-center p-4">
         <div
-          className={`${iconBgColor} rounded-md p-3 flex items-center justify-center mr-4 transition-transform duration-300 ease-in-out ${
-            isHovered ? "scale-110" : ""
+          className={`${iconBgColor} rounded-full p-3.5 flex items-center justify-center mr-4 transition-all duration-300 ease-in-out shadow-md ${
+            isHovered ? "scale-110 shadow-lg shadow-[#D4AF37]/20" : ""
           }`}
         >
           <Icon size={24} className="text-white" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold gold-text title-font">
+          <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B] title-font">
             {title}
           </h3>
-          <p className="text-sm text-white/70 max-w-[200px] truncate">
+          <p className="text-sm text-white/80 max-w-[200px] truncate">
             {description}
           </p>
         </div>
         <motion.div
-          className="gold-text text-xl font-bold"
-          animate={{ x: isHovered ? 0 : 10, opacity: isHovered ? 1 : 0 }}
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-black"
+          animate={{ 
+            x: isHovered ? 0 : 10, 
+            opacity: isHovered ? 1 : 0,
+            scale: isHovered ? 1 : 0.8
+          }}
           transition={{ duration: 0.2 }}
         >
-          →
+          <span className="font-bold">→</span>
         </motion.div>
       </div>
     </motion.div>
