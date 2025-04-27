@@ -175,15 +175,7 @@ export default function Home() {
         </div>
       </motion.section>
       
-      {/* Footer */}
-      <motion.div 
-        className="w-full text-center mb-6 text-white/50 text-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-      >
-        <p>Designed by Varnora | © {new Date().getFullYear()} All Rights Reserved</p>
-      </motion.div>
+      
       
       {/* Admin Login Modal */}
       <AdminLoginModal 
