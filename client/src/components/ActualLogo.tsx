@@ -15,7 +15,7 @@ export default function ActualLogo({
   glowEffect = false
 }: ActualLogoProps) {
   const logoRef = useRef<HTMLDivElement>(null);
-  
+
   // Size mapping
   const sizeClasses = {
     sm: "w-16 h-16",
@@ -23,42 +23,42 @@ export default function ActualLogo({
     lg: "w-32 h-32",
     xl: "w-40 h-40"
   };
-  
+
   // Animation effect
   useEffect(() => {
     if (!animated || !logoRef.current) return;
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!logoRef.current) return;
-      
+
       const rect = logoRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      
+
       const tiltX = (x - centerX) / (rect.width / 2) * 10;
       const tiltY = (y - centerY) / (rect.height / 2) * -10;
-      
+
       logoRef.current.style.transform = `perspective(1000px) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
     };
-    
+
     const handleMouseLeave = () => {
       if (!logoRef.current) return;
       logoRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
     };
-    
+
     logoRef.current.addEventListener('mousemove', handleMouseMove);
     logoRef.current.addEventListener('mouseleave', handleMouseLeave);
-    
+
     return () => {
       if (!logoRef.current) return;
       logoRef.current.removeEventListener('mousemove', handleMouseMove);
       logoRef.current.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [animated, logoRef]);
-  
+
   return (
     <div 
       ref={logoRef}
@@ -67,11 +67,16 @@ export default function ActualLogo({
       } ${glowEffect ? "animate-glow" : ""}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
-      <img 
-        src={actualLogo} 
-        alt="Varnora Logo" 
-        className="w-full h-full object-contain rounded-full"
-      />
+      <div className="flex flex-col items-center">
+          <img 
+            src={actualLogo} 
+            alt="Varnora Logo" 
+            className="w-full h-full object-contain rounded-full"
+          />
+          <span className="mt-2 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B]">
+            VARNORA
+          </span>
+        </div>
     </div>
   );
 }
