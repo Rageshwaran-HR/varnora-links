@@ -41,6 +41,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/links", async (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     try {
       const linkData = insertLinkSchema.parse(req.body);
       const link = await storage.createLink(linkData);
@@ -54,6 +59,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.put("/api/links/:id", async (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     try {
       const id = parseInt(req.params.id);
       const link = await storage.getLink(id);
@@ -70,6 +80,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.delete("/api/links/:id", async (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteLink(id);
@@ -95,6 +110,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.put("/api/company-info", async (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     try {
       const updatedInfo = await storage.updateCompanyInfo(req.body);
       res.json(updatedInfo);
@@ -114,6 +134,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.put("/api/appearance", async (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     try {
       const updatedSettings = await storage.updateAppearance(req.body);
       res.json(updatedSettings);
