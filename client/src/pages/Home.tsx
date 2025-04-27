@@ -179,28 +179,46 @@ export default function Home() {
       >
         <Link to="/auth">
           <Button 
-            className="gold-gradient-animated text-black font-medium btn-3d px-6 py-6 rounded-md shadow-lg"
+            className="gold-gradient-animated text-black font-semibold btn-3d px-8 py-4 rounded-md shadow-lg"
           >
-            <FaUserShield className="mr-2 text-black group-hover:animate-pulse" />
-            <span className="font-semibold">Admin Access</span>
+            <FaUserShield className="mr-2 h-5 w-5 text-black" />
+            <span className="tracking-wider">ADMIN ACCESS</span>
           </Button>
         </Link>
       </motion.div>
 
       {/* Company Details */}
       <motion.section 
-        className="glass-dark rounded-xl p-8 max-w-2xl w-full mb-14"
+        className="glass-dark rounded-xl p-8 max-w-2xl w-full mb-14 border border-[#D4AF37]/20"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
       >
-        <h2 className="text-2xl font-bold gold-text mb-4 text-center title-font">About Varnora</h2>
-        <p className="text-lg text-white/70 leading-relaxed text-center body-font">
+        <div className="flex justify-center mb-4">
+          <div className="h-0.5 w-20 gold-gradient rounded-full"></div>
+        </div>
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B] mb-4 text-center title-font">
+          About Varnora
+        </h2>
+        <p className="text-lg text-white/80 leading-relaxed text-center body-font">
           Varnora specializes in crafting distinctive web experiences and creative designs that blend aesthetics with functionality. 
           Our passion lies in transforming ideas into digital realities that not only look stunning but also perform exceptionally.
           With an eye for detail and commitment to excellence, we deliver solutions that truly speak to your audience.
         </p>
+        <div className="flex justify-center mt-4">
+          <div className="h-0.5 w-20 gold-gradient rounded-full"></div>
+        </div>
       </motion.section>
+      
+      {/* Footer */}
+      <motion.div 
+        className="w-full text-center mb-6 text-white/50 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        <p>Designed by Varnora | © {new Date().getFullYear()} All Rights Reserved</p>
+      </motion.div>
       
       {/* Admin Login Modal */}
       <AdminLoginModal 
