@@ -124,7 +124,7 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
             <Button
               type="button"
               variant="outline"
-              className="mb-2 sm:mb-0 border-[#D4AF37]/30 text-white hover:bg-[#D4AF37]/10"
+              className="mb-2 sm:mb-0 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 py-6 px-6"
               disabled={loading}
               onClick={onClose}
             >
@@ -132,12 +132,12 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
             </Button>
             <Button 
               type="submit" 
-              className="gold-gradient text-black font-medium btn-3d"
+              className="gold-gradient-animated text-black font-semibold btn-3d py-6 px-6 shadow-lg"
               disabled={loading}
             >
               {loading ? (
                 <motion.div
-                  className="h-6 w-6 rounded-full border-2 border-t-transparent border-white/80 animate-spin"
+                  className="h-6 w-6 rounded-full border-2 border-t-transparent border-black animate-spin"
                 />
               ) : (
                 "Sign In"

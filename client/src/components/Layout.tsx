@@ -25,10 +25,16 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen flex flex-col relative luxury-scrollbar">
       {/* Loader */}
       {loading && (
-        <div className="fixed inset-0 bg-background flex flex-col justify-center items-center z-50 transition-all duration-500">
-          <VarnoraLogo size="lg" glowEffect={true} className="mb-8" />
-          <div className="w-24 h-1 bg-black overflow-hidden rounded-full">
-            <div className="h-full gold-gradient animate-gradient-x bg-size-200"></div>
+        <div className="fixed inset-0 bg-gradient-to-b from-black via-[#0A0A0A] to-black flex flex-col justify-center items-center z-50 transition-all duration-500">
+          <div className="relative">
+            <VarnoraLogo size="lg" glowEffect={true} className="mb-10 animate-float" />
+            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-48 h-12 bg-gradient-radial from-[#D4AF37]/30 to-transparent blur-xl"></div>
+          </div>
+          <div className="mt-8 flex flex-col items-center">
+            <h2 className="text-2xl font-bold gold-text mb-6 animate-pulse-slow title-font tracking-wider">VARNORA</h2>
+            <div className="w-48 h-1.5 bg-black/60 overflow-hidden rounded-full border border-[#D4AF37]/20">
+              <div className="h-full gold-gradient-animated animate-gradient-x bg-size-200"></div>
+            </div>
           </div>
         </div>
       )}

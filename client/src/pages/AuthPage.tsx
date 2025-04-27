@@ -208,7 +208,7 @@ export default function AuthPage() {
                       />
                       <Button 
                         type="submit" 
-                        className="w-full gold-gradient text-black font-medium btn-3d"
+                        className="w-full gold-gradient-animated text-black font-semibold btn-3d py-6 shadow-lg"
                         disabled={isLoading}
                       >
                         {isLoading ? (
@@ -326,7 +326,7 @@ export default function AuthPage() {
                       </div>
                       <Button 
                         type="submit" 
-                        className="w-full gold-gradient text-black font-medium btn-3d"
+                        className="w-full gold-gradient-animated text-black font-semibold btn-3d py-6 shadow-lg"
                         disabled={isLoading}
                       >
                         {isLoading ? (

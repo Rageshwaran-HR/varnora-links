@@ -183,15 +183,15 @@ export default function AdminPage() {
             <div className="flex justify-end space-x-4">
               <Button
                 variant="outline"
-                className="border-destructive text-destructive hover:bg-destructive/10"
+                className="border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 py-6 px-6"
               >
-                <Trash2 size={16} className="mr-2" />
+                <Trash2 size={18} className="mr-2" />
                 Reset
               </Button>
               
               <Button 
                 onClick={handleSave}
-                className="gold-gradient text-black font-medium btn-3d"
+                className="gold-gradient-animated text-black font-semibold btn-3d py-6 px-8 shadow-lg"
                 disabled={saving}
               >
                 {saving ? (
@@ -201,7 +201,7 @@ export default function AdminPage() {
                   </>
                 ) : (
                   <>
-                    <Save size={16} className="mr-2" />
+                    <Save size={18} className="mr-2" />
                     Save Changes
                   </>
                 )}
@@ -234,10 +234,10 @@ export default function AdminPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-[#D4AF37]/30 text-white hover:bg-[#D4AF37]/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 py-6 px-6">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleLogout}
-              className="gold-gradient text-black font-medium btn-3d"
+              className="gold-gradient-animated text-black font-semibold btn-3d py-6 px-6 shadow-lg"
             >
               Logout
             </AlertDialogAction>

@@ -168,11 +168,10 @@ export default function Home() {
       >
         <Link to="/auth">
           <Button 
-            variant="outline" 
-            className="group relative border-[#D4AF37]/30 text-white hover:bg-[#D4AF37]/10"
+            className="gold-gradient-animated text-black font-medium btn-3d px-6 py-6 rounded-md shadow-lg"
           >
-            <FaUserShield className="mr-2 text-[#D4AF37] group-hover:animate-pulse" />
-            <span>Admin Access</span>
+            <FaUserShield className="mr-2 text-black group-hover:animate-pulse" />
+            <span className="font-semibold">Admin Access</span>
           </Button>
         </Link>
       </motion.div>
