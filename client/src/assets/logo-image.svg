@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5E7A3" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" fill="black"/>
+  <g transform="translate(10, 10) scale(0.96)">
+    <!-- This path attempts to trace the ornate V shape with its flourishes from the reference image -->
+    <path d="M250,30 
+             C300,50 350,100 380,150
+             C410,200 440,260 440,300
+             C440,340 420,380 380,420
+             C340,460 310,470 250,470
+             C190,470 160,460 120,420
+             C80,380 60,340 60,300
+             C60,260 90,200 120,150
+             C150,100 200,50 250,30Z" 
+          fill="black" stroke="url(#gold)" stroke-width="3"/>
+          
+    <!-- The main V shape -->
+    <path d="M250,80 L380,400 L120,400 Z" 
+          fill="none" stroke="url(#gold)" stroke-width="8"/>
+          
+    <!-- The inner V design -->
+    <path d="M250,120 L340,360 L160,360 Z" 
+          fill="none" stroke="url(#gold)" stroke-width="5"/>
+          
+    <!-- Top flourish -->
+    <path d="M250,40 
+             C270,45 280,60 270,70
+             C260,80 240,80 230,70
+             C220,60 230,45 250,40Z" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+          
+    <!-- Bottom flourishes -->
+    <path d="M120,400 
+             C100,380 90,420 110,440
+             C130,460 150,420 120,400Z" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M380,400 
+             C400,380 410,420 390,440
+             C370,460 350,420 380,400Z" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+             
+    <!-- Right side flourishes -->
+    <path d="M380,200 
+             C400,210 410,230 390,250
+             C370,270 360,290 380,310" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M380,300 
+             C400,310 410,330 390,350
+             C370,370 390,390 410,380" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+             
+    <!-- Left side flourishes -->
+    <path d="M120,200 
+             C100,210 90,230 110,250
+             C130,270 140,290 120,310" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M120,300 
+             C100,310 90,330 110,350
+             C130,370 110,390 90,380" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+             
+    <!-- Additional flourishes from top to sides -->
+    <path d="M250,80 
+             C280,100 310,130 330,170
+             C350,210 360,250 380,310" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <path d="M250,80 
+             C220,100 190,130 170,170
+             C150,210 140,250 120,310" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+             
+    <!-- Small decorative elements -->
+    <circle cx="250" cy="40" r="5" fill="url(#gold)"/>
+    <circle cx="380" cy="400" r="5" fill="url(#gold)"/>
+    <circle cx="120" cy="400" r="5" fill="url(#gold)"/>
+    <path d="M250,10 L260,25 L250,40 L240,25 Z" fill="url(#gold)"/>
+    <path d="M250,440 L260,455 L250,470 L240,455 Z" fill="url(#gold)"/>
+  </g>
+</svg>

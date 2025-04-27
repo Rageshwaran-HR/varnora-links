@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5E7A3" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="500" height="500" fill="black"/>
+  <g filter="url(#glow)">
+    <!-- This is a close approximation of the provided logo image -->
+    <!-- Main V shape -->
+    <path d="M250,50 L400,400 L100,400 Z" fill="none" stroke="url(#gold)" stroke-width="10"/>
+    
+    <!-- Inner V contours -->
+    <path d="M250,100 L360,380 L140,380 Z" fill="none" stroke="url(#gold)" stroke-width="5"/>
+    
+    <!-- Central flourish at top -->
+    <path d="M250,20 
+             C260,30 270,40 260,50
+             C250,60 240,60 230,50
+             C220,40 230,30 250,20Z" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+          
+    <!-- Top flourishes -->
+    <path d="M250,50 
+             C280,70 290,90 270,110
+             C250,130 240,150 260,170" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M250,50 
+             C220,70 210,90 230,110
+             C250,130 260,150 240,170" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+             
+    <!-- Side flourishes left -->
+    <path d="M100,400 
+             C80,360 100,340 130,370
+             C160,400 180,380 170,350" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M140,350 
+             C120,330 130,310 150,330
+             C170,350 160,370 140,350" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+             
+    <!-- Side flourishes right -->
+    <path d="M400,400 
+             C420,360 400,340 370,370
+             C340,400 320,380 330,350" 
+          fill="none" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M360,350 
+             C380,330 370,310 350,330
+             C330,350 340,370 360,350" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+             
+    <!-- More decorative curls -->
+    <path d="M190,200 
+             C180,220 170,230 190,250
+             C210,270 190,290 170,280" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <path d="M310,200 
+             C320,220 330,230 310,250
+             C290,270 310,290 330,280" 
+          fill="none" stroke="url(#gold)" stroke-width="3"/>
+             
+    <!-- Diamond accents -->
+    <path d="M250,15 L260,25 L250,35 L240,25 Z" fill="url(#gold)"/>
+    <path d="M250,415 L260,425 L250,435 L240,425 Z" fill="url(#gold)"/>
+    <path d="M90,390 L100,400 L90,410 L80,400 Z" fill="url(#gold)"/>
+    <path d="M410,390 L420,400 L410,410 L400,400 Z" fill="url(#gold)"/>
+  </g>
+</svg>
