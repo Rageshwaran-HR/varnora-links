@@ -11,6 +11,7 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import ws from "ws";
 import * as schema from "@shared/schema";
+import { hashPassword } from "./auth";
 
 neonConfig.webSocketConstructor = ws;
 
@@ -80,7 +81,7 @@ export class DatabaseStorage implements IStorage {
     if (!existingAdmin) {
       await this.createUser({
         username: "admin",
-        password: "5a4d6f9a2f8ed5b8ae5f30c095d92b42.4a7fb24b5e9cc5184ec46f7686a365a9d09c63dffa0f92280b4cd7a4f63ebe2dfdb73cc2a5af8b9ff8b9a50c5a262c77cc8a6028e9cf0f51b7e87b83147cf2a5", // varnora2025
+        password: await hashPassword("varnora2025"),
       });
     }
   }
