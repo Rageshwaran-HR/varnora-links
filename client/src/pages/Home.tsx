@@ -67,7 +67,7 @@ export default function Home() {
         </motion.div>
         
         <motion.h1 
-          className="text-5xl md:text-6xl font-bold tracking-tight text-center mb-4 gold-text-shadow title-font"
+          className="text-5xl md:text-6xl font-bold tracking-tight text-center mb-8 gold-text-shadow title-font"
           variants={item}
         >
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#F5E7A3] via-[#D4AF37] to-[#B8860B]">
@@ -76,14 +76,14 @@ export default function Home() {
         </motion.h1>
         
         <motion.p 
-          className="text-xl text-center mb-6 max-w-xl tracking-wide text-white/80 body-font"
+          className="text-xl text-center mb-10 max-w-xl tracking-wide text-white/80 body-font leading-relaxed"
           variants={item}
         >
           Web Development & Creative Design – <i>Design That Speaks</i>
         </motion.p>
         
         <motion.div 
-          className="h-1 w-32 gold-gradient rounded-full mb-10"
+          className="h-1 w-32 gold-gradient rounded-full mb-12"
           variants={item}
         />
       </motion.header>
