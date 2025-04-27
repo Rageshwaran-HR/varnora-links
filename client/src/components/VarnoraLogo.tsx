@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import attachedLogoSvg from "../assets/attached-logo.svg";
+import varnoraLogoImg from "../assets/varnora-actual-logo.jpg";
 
 interface VarnoraLogoProps {
   className?: string;
@@ -82,9 +82,9 @@ export default function VarnoraLogo({
         }}
       >
         <img 
-          src={attachedLogoSvg} 
+          src={varnoraLogoImg} 
           alt="Varnora Logo" 
-          className={`w-full h-full ${glowEffect ? "animate-glow" : ""}`}
+          className={`w-full h-full object-contain ${glowEffect ? "animate-glow" : ""}`}
         />
       </div>
     </div>
