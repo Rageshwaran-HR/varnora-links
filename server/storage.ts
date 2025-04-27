@@ -12,6 +12,7 @@ import connectPg from "connect-pg-simple";
 import ws from "ws";
 import * as schema from "@shared/schema";
 import { hashPassword } from "./auth";
+import 'dotenv/config';
 
 neonConfig.webSocketConstructor = ws;
 
