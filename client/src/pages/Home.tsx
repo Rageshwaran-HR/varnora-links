@@ -65,7 +65,7 @@ export default function Home() {
       
       {/* Links */}
       <motion.main 
-        className="w-full max-w-xl space-y-4 mb-12"
+        className="w-full max-w-xl space-y-4 mb-12 mt-16"
         variants={container}
         initial="hidden"
         animate="show"
