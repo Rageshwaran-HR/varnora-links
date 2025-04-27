@@ -4,8 +4,12 @@ import { storage } from "./storage";
 import path from "path";
 import { insertLinkSchema, insertCompanyInfoSchema } from "@shared/schema";
 import { ZodError } from "zod";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Set up authentication
+  setupAuth(app);
+  
   // API routes
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", time: new Date().toISOString() });
