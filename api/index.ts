@@ -3,6 +3,11 @@ import { registerRoutes } from "./routes";
 import { setupVite } from "./vite";
 import path from "path";
 import 'dotenv/config';
+import { fileURLToPath } from "url";  // Import to resolve __dirname
+
+// This workaround manually defines __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url); 
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
@@ -53,7 +58,7 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     // Serve static frontend build in production
-    const staticPath = path.join(__dirname, "public");
+    const staticPath = path.join(__dirname, "public"); // Use __dirname here
     console.log("Serving static from", staticPath);
     app.use(express.static(staticPath));
 

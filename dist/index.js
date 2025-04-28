@@ -454,15 +454,15 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
-var __dirname2 = path.dirname(__filename);
-if (!__dirname2) {
+var __dirname = path.dirname(__filename);
+if (!__dirname) {
   throw new Error("Failed to resolve __dirname");
 }
-var staticPath = path.resolve(__dirname2, "some-directory");
+var staticPath = path.resolve(__dirname, "some-directory");
 if (!staticPath) {
   throw new Error("Static path is undefined");
 }
-console.log("Resolved path:", path.resolve(__dirname2, "client", "src"));
+console.log("Resolved path:", path.resolve(__dirname, "client", "src"));
 var vite_config_default = defineConfig(async () => {
   const plugins = [
     react(),
@@ -476,14 +476,14 @@ var vite_config_default = defineConfig(async () => {
     plugins,
     resolve: {
       alias: {
-        "@": path.resolve(__dirname2, "client", "src"),
-        "@shared": path.resolve(__dirname2, "shared"),
-        "@assets": path.resolve(__dirname2, "attached_assets")
+        "@": path.resolve(__dirname, "client", "src"),
+        "@shared": path.resolve(__dirname, "shared"),
+        "@assets": path.resolve(__dirname, "attached_assets")
       }
     },
-    root: path.resolve(__dirname2, "client"),
+    root: path.resolve(__dirname, "client"),
     build: {
-      outDir: path.resolve(__dirname2, "dist"),
+      outDir: path.resolve(__dirname, "dist"),
       // Change outDir to 'dist' instead of 'dist/public'
       emptyOutDir: true
     }
@@ -494,7 +494,7 @@ var vite_config_default = defineConfig(async () => {
 import { nanoid } from "nanoid";
 import { fileURLToPath as fileURLToPath2 } from "url";
 var __filename2 = fileURLToPath2(import.meta.url);
-var __dirname3 = path2.dirname(__filename2);
+var __dirname2 = path2.dirname(__filename2);
 var viteLogger = createLogger();
 async function setupVite(app2, server) {
   const serverOptions = {
@@ -520,7 +520,7 @@ async function setupVite(app2, server) {
     const url = req.originalUrl;
     try {
       const clientTemplate = path2.resolve(
-        __dirname3,
+        __dirname2,
         "..",
         "client",
         "index.html"
@@ -542,6 +542,9 @@ async function setupVite(app2, server) {
 // api/index.ts
 import path3 from "path";
 import "dotenv/config";
+import { fileURLToPath as fileURLToPath3 } from "url";
+var __filename3 = fileURLToPath3(import.meta.url);
+var __dirname3 = path3.dirname(__filename3);
 var app = express2();
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
@@ -580,7 +583,7 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    const staticPath2 = path3.join(__dirname, "public");
+    const staticPath2 = path3.join(__dirname3, "public");
     console.log("Serving static from", staticPath2);
     app.use(express2.static(staticPath2));
     app.get("*", (req, res) => {
