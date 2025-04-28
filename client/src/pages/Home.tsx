@@ -119,7 +119,7 @@ export default function Home() {
           <>
             <motion.div variants={item}>
               <LinkCard
-                icon={FaWhatsapp}
+                icon={<FaWhatsapp />}
                 iconBgColor="bg-green-600"
                 title="WhatsApp"
                 description="Contact us directly"
@@ -129,7 +129,7 @@ export default function Home() {
             
             <motion.div variants={item}>
               <LinkCard
-                icon={FaGlobe}
+                icon={<FaGlobe />}
                 iconBgColor="bg-[#D4AF37]"
                 title="Company Website"
                 description="Visit our official website"
@@ -139,7 +139,7 @@ export default function Home() {
             
             <motion.div variants={item}>
               <LinkCard
-                icon={FaInstagram}
+                icon={<FaInstagram />}
                 iconBgColor="bg-gradient-to-tr from-purple-600 to-yellow-400"
                 title="Instagram"
                 description="Follow our creative journey"
@@ -149,7 +149,7 @@ export default function Home() {
             
             <motion.div variants={item}>
               <LinkCard
-                icon={FaLinkedinIn}
+                icon={<FaLinkedinIn />}
                 iconBgColor="bg-blue-700"
                 title="LinkedIn"
                 description="Connect professionally"
@@ -159,7 +159,7 @@ export default function Home() {
             
             <motion.div variants={item}>
               <LinkCard
-                icon={FaEnvelope}
+                icon={<FaEnvelope />}
                 iconBgColor="bg-red-500"
                 title="Email Us"
                 description="Let's discuss your project"
@@ -173,7 +173,7 @@ export default function Home() {
             
             <motion.div variants={item}>
               <LinkCard
-                icon={FaMapMarkerAlt}
+                icon={<FaMapMarkerAlt />}
                 iconBgColor="bg-blue-500"
                 title="Business Location"
                 description="Find us on Google Maps"
