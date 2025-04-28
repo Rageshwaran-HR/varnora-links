@@ -5,7 +5,10 @@ var __export = (target, all) => {
 };
 
 // api/index.ts
-import express2 from "express";
+import express from "express";
+import cors from "cors";
+import path from "path";
+import "dotenv/config";
 
 // api/routes.ts
 import { createServer } from "http";
@@ -441,116 +444,17 @@ async function registerRoutes(app2) {
   return httpServer;
 }
 
-// api/vite.ts
-import express from "express";
-import fs from "fs";
-import path2 from "path";
-import { createServer as createViteServer, createLogger } from "vite";
-
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+// api/index.ts
 import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
-if (!__dirname) {
-  throw new Error("Failed to resolve __dirname");
-}
-var staticPath = path.resolve(__dirname, "some-directory");
-if (!staticPath) {
-  throw new Error("Static path is undefined");
-}
-console.log("Resolved path:", path.resolve(__dirname, "client", "src"));
-var vite_config_default = defineConfig(async () => {
-  const plugins = [
-    react(),
-    runtimeErrorOverlay(),
-    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      // Dynamically import this only when needed
-      (await import("@replit/vite-plugin-cartographer")).cartographer()
-    ] : []
-  ];
-  return {
-    plugins,
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "client", "src"),
-        "@shared": path.resolve(__dirname, "shared"),
-        "@assets": path.resolve(__dirname, "attached_assets")
-      }
-    },
-    root: path.resolve(__dirname, "client"),
-    build: {
-      outDir: path.resolve(__dirname, "dist"),
-      // Change outDir to 'dist' instead of 'dist/public'
-      emptyOutDir: true
-    }
-  };
-});
-
-// api/vite.ts
-import { nanoid } from "nanoid";
-import { fileURLToPath as fileURLToPath2 } from "url";
-var __filename2 = fileURLToPath2(import.meta.url);
-var __dirname2 = path2.dirname(__filename2);
-var viteLogger = createLogger();
-async function setupVite(app2, server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true
-  };
-  const vite = await createViteServer({
-    ...vite_config_default,
-    configFile: false,
-    customLogger: {
-      ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
-        process.exit(1);
-      }
-    },
-    server: serverOptions,
-    appType: "custom"
-  });
-  app2.use(vite.middlewares);
-  app2.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      const clientTemplate = path2.resolve(
-        __dirname2,
-        "..",
-        "client",
-        "index.html"
-      );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      vite.ssrFixStacktrace(e);
-      next(e);
-    }
-  });
-}
-
-// api/index.ts
-import path3 from "path";
-import "dotenv/config";
-import { fileURLToPath as fileURLToPath3 } from "url";
-var __filename3 = fileURLToPath3(import.meta.url);
-var __dirname3 = path3.dirname(__filename3);
-var app = express2();
-app.use(express2.json());
-app.use(express2.urlencoded({ extended: false }));
+var app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
-  const path4 = req.path;
+  const path2 = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
@@ -559,8 +463,8 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path4.startsWith("/api")) {
-      let logLine = `${req.method} ${path4} ${res.statusCode} in ${duration}ms`;
+    if (path2.startsWith("/api")) {
+      let logLine = `${req.method} ${path2} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -580,16 +484,12 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
     throw err;
   });
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    const staticPath2 = path3.join(__dirname3, "public");
-    console.log("Serving static from", staticPath2);
-    app.use(express2.static(staticPath2));
-    app.get("*", (req, res) => {
-      res.sendFile(path3.join(staticPath2, "index.html"));
-    });
-  }
+  const staticPath = path.join(__dirname, "public");
+  console.log("Serving static from", staticPath);
+  app.use(express.static(staticPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(staticPath, "index.html"));
+  });
   const port = process.env.PORT || 5e3;
   server.listen(port, () => {
     console.log(`Server running on port ${port}`);
