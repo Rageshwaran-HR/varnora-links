@@ -3,16 +3,16 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { useToast } from "../../hooks/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Switch } from "../../components/ui/switch";
 import { Loader2 } from "lucide-react";
-import AdminSidebar from "@/components/admin/AdminSidebar";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AdminSidebar from "../../components/admin/AdminSidebar";
+import { apiRequest, queryClient } from "../../lib/queryClient";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 
 const appearanceSchema = z.object({
   primaryColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Must be a valid hex color"),

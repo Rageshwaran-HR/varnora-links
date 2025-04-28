@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { Loader2, MousePointerClick, Link, Settings, FileText, ExternalLink } from "lucide-react";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminSidebar from "../../components/admin/AdminSidebar";
 import { Link as WouterLink } from "wouter";
-import VarnoraLogo from "@/components/VarnoraLogo";
+import VarnoraLogo from "../../components/VarnoraLogo";
 
 export default function DashboardPage() {
   // Fetch company info

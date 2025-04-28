@@ -1,7 +1,7 @@
 import { useState, ReactNode } from "react";
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
-import { openLink } from "@/lib/utils";
+import { openLink } from "../lib/utils";
 
 interface LinkCardProps {
   icon: ReactNode;

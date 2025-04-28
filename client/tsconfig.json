@@ -1,5 +1,5 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*", "client/tsconfig.json"],
+  "include": ["./src/**/*", "./shared/**/*", "./server/**/*"],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
@@ -16,8 +16,14 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./src/*"],
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "resolve": {
+    "alias": {
+      "@": "path.resolve(__dirname, 'client', 'src')",
+      "@shared": "path.resolve(__dirname, 'shared')"
     }
   }
 }

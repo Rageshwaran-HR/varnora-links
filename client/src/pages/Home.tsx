@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import VarnoraLogo from "@/components/VarnoraLogo";
-import ActualLogo from "@/components/ActualLogo";
-import LinkCard from "@/components/LinkCard";
-import { SOCIAL_LINKS } from "@/lib/constants";
-import { useToast } from "@/hooks/use-toast";
-import AdminLoginModal from "@/components/admin/AdminLoginModal";
+import ActualLogo from "../components/ActualLogo";
+import LinkCard from "../components/LinkCard";
+import { SOCIAL_LINKS } from "../lib/constants";
+import { useToast } from "../hooks/use-toast";
+import AdminLoginModal from "../components/admin/AdminLoginModal";
 import { FaWhatsapp, FaGlobe, FaInstagram, FaLinkedinIn, FaEnvelope, FaMapMarkerAlt, FaUserShield } from "react-icons/fa";
 import * as Icons from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { Link } from "wouter";
-import { queryClient } from "@/lib/queryClient";
+import { queryClient } from "../lib/queryClient";
 
 export default function Home() {
   const { toast } = useToast();
