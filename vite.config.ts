@@ -11,6 +11,11 @@ if (!__dirname) {
   throw new Error("Failed to resolve __dirname");
 }
 
+const staticPath = path.resolve(__dirname, "some-directory");
+if (!staticPath) {
+  throw new Error("Static path is undefined");
+}
+
 console.log("Resolved path:", path.resolve(__dirname, "client", "src"));
 
 export default defineConfig(async () => {
@@ -36,8 +41,8 @@ export default defineConfig(async () => {
     },
     root: path.resolve(__dirname, "client"),
     build: {
-      outDir: path.resolve(__dirname, "client", "dist"),  // Output to 'dist' folder inside 'client'
-      emptyOutDir: true, // Make sure dist gets cleared before each build
+      outDir: path.resolve(__dirname, "dist"), // Change outDir to 'dist' instead of 'dist/public'
+      emptyOutDir: true,
     },
   };
 });
