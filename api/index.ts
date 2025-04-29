@@ -63,7 +63,7 @@ app.use((req, res, next) => {
   });
 
   // Serve static frontend build in production
-  const staticPath = path.join(__dirname, "public");  // Ensure public folder exists
+  const staticPath = path.join(__dirname, "..", "dist");  // Correct path to the root level 'dist' folder
   console.log("Serving static from", staticPath);
   app.use(express.static(staticPath));
 

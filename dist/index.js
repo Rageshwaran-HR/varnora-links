@@ -484,7 +484,7 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
     throw err;
   });
-  const staticPath = path.join(__dirname, "public");
+  const staticPath = path.join(__dirname, "..", "dist");
   console.log("Serving static from", staticPath);
   app.use(express.static(staticPath));
   app.get("*", (req, res) => {
