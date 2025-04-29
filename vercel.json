@@ -15,16 +15,19 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
+      "src": "^/api/(.*)",
+      "dest": "api/index.ts"
     },
     {
-      "src": "/(.*\\.(js|mjs|cjs|css|svg|png|jpg|jpeg|ico|woff2?|ttf|map))",
-      "dest": "/client/dist/$1"
+      "src": "^/(.*\\.(js|css|svg|png|jpg|jpeg|ico|woff2?|ttf|map))$",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "dest": "client/dist/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/client/dist/index.html"
+      "src": "^/(.*)",
+      "dest": "client/dist/index.html"
     }
   ]
 }

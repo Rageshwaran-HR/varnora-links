@@ -5,13 +5,10 @@ var __export = (target, all) => {
 };
 
 // api/index.ts
-import { createServer as createServer2 } from "http";
-
-// api/server.ts
 import express from "express";
 import cors from "cors";
 import path from "path";
-import { fileURLToPath } from "url";
+import "dotenv/config";
 
 // api/routes.ts
 import { createServer } from "http";
@@ -447,8 +444,8 @@ async function registerRoutes(app2) {
   return httpServer;
 }
 
-// api/server.ts
-import "dotenv/config";
+// api/index.ts
+import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 var app = express();
@@ -471,24 +468,30 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-      if (logLine.length > 80) logLine = logLine.slice(0, 79) + "\u2026";
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "\u2026";
+      }
       console.log(logLine);
     }
   });
   next();
 });
-await registerRoutes(app);
-app.use((err, _req, res, _next) => {
-  const status = err.status || 500;
-  res.status(status).json({ message: err.message || "Internal Server Error" });
-});
-var server_default = app;
-
-// api/index.ts
-var server = createServer2(server_default);
-function handler(req, res) {
-  server.emit("request", req, res);
-}
-export {
-  handler as default
-};
+(async () => {
+  const server = await registerRoutes(app);
+  app.use((err, _req, res, _next) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+    res.status(status).json({ message });
+    throw err;
+  });
+  const staticPath = path.join(__dirname, "..", "dist");
+  console.log("Serving static from", staticPath);
+  app.use(express.static(staticPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(staticPath, "index.html"));
+  });
+  const port = process.env.PORT || 5e3;
+  server.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+})();
