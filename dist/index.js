@@ -7,8 +7,8 @@ var __export = (target, all) => {
 // api/index.ts
 import express from "express";
 import cors from "cors";
+import { fileURLToPath } from "url";
 import path from "path";
-import "dotenv/config";
 
 // api/routes.ts
 import { createServer } from "http";
@@ -445,53 +445,19 @@ async function registerRoutes(app2) {
 }
 
 // api/index.ts
-import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 var app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path2 = req.path;
-  let capturedJsonResponse = void 0;
-  const originalResJson = res.json;
-  res.json = function(bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path2.startsWith("/api")) {
-      let logLine = `${req.method} ${path2} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "\u2026";
-      }
-      console.log(logLine);
-    }
-  });
-  next();
+await registerRoutes(app);
+app.use(express.static(path.join(__dirname, "..", "client", "dist")));
+var port = process.env.PORT || 5e3;
+var server = app.listen(port, () => {
+  console.log(`Express server running at http://localhost:${port}`);
 });
-(async () => {
-  const server = await registerRoutes(app);
-  app.use((err, _req, res, _next) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
-    throw err;
-  });
-  const staticPath = path.join(__dirname, "..", "dist");
-  console.log("Serving static from", staticPath);
-  app.use(express.static(staticPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
-  });
-  const port = process.env.PORT || 5e3;
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-})();
+var index_default = server;
+export {
+  index_default as default
+};
