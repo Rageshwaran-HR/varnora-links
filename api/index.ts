@@ -4,7 +4,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { registerRoutes } from "./routes";
 import serverless from "serverless-http";
-
+import companyInfoRoutes from "./company-info";
+import linksRoutes from "./links";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 console.log(path.resolve("./api/routes"));
@@ -13,6 +14,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use("/api/links", linksRoutes);
+app.use("/api/company-info", companyInfoRoutes);
 
 // Register API routes
 await registerRoutes(app);
