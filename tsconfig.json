@@ -1,5 +1,5 @@
 {
-  "include": ["api/**/*", "client/src/**/*", "shared/**/*"],
+  "include": ["api/**/*", "client/src/**/*", "shared/**/*","custom.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "jsx": "react-jsx", // Enable JSX support
