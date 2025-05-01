@@ -1,4 +1,4 @@
-import { storage } from "../storage";
+import { storage } from "./storage";
 import { insertCompanyInfoSchema } from "../shared/schema";
 
 export default async function handler(req, res) {
