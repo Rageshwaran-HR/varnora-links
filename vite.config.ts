@@ -36,8 +36,13 @@ export default defineConfig(() => {
     },
     server: {
       proxy: {
-        '/api': 'http://localhost:5000', // Proxy API requests during development
+        "/api": {
+          target: "http://localhost:5000", // Ensure this matches your backend's port
+          changeOrigin: true,
+          secure: false,
+        },
       },
+      port: 3001, // Change to an available port
     },
   };
 });

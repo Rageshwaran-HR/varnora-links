@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
-import { createServer as createHttpServer } from "http";
 import { fileURLToPath } from "url";
 import path from "path";
-import { registerRoutes } from "./routes"; // Adjusted import path for your routes
-import serverless from "serverless-http"; // For serverless export, if needed later
+import { registerRoutes } from "./routes";
+import serverless from "serverless-http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,16 +16,17 @@ app.use(express.urlencoded({ extended: false }));
 // Register API routes
 await registerRoutes(app);
 
-// Static file serving if needed (uncomment if necessary)
-app.use(express.static(path.join(__dirname, "..", "client", "dist"))); 
+// Static file serving if needed
+app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 
 // For production, export the handler for serverless
-// export const handler = serverless(app);  // Uncomment only if deploying to Vercel or another serverless platform
+export const handler = serverless(app);
 
-// Dev: Ensure the server keeps running
-const port = process.env.PORT || 5000;
-const server = app.listen(port, () => {
-  console.log(`Express server running at http://localhost:${port}`);
-});
+// Add local server for development
+if (process.env.NODE_ENV === "development") {
+    const PORT = 5000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
 
-export default server;

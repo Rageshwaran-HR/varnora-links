@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Loader2, MousePointerClick, Link, Settings, FileText, ExternalLink } from "lucide-react";
@@ -7,6 +8,18 @@ import { Link as WouterLink } from "wouter";
 import VarnoraLogo from "../../components/VarnoraLogo";
 
 export default function DashboardPage() {
+  const [links, setLinks] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/links")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("API Response:", data);
+        setLinks(Array.isArray(data) ? data : []); // Ensure it's an array
+      })
+      .catch((error) => console.error("Error fetching links:", error));
+  }, []);
+
   // Fetch company info
   const { 
     data: companyInfo, 
@@ -22,26 +35,11 @@ export default function DashboardPage() {
     }
   });
 
-  // Fetch links
-  const { 
-    data: links, 
-    isLoading: isLoadingLinks,
-  } = useQuery({
-    queryKey: ["/api/links"],
-    queryFn: async () => {
-      const response = await fetch("/api/links");
-      if (!response.ok) {
-        throw new Error("Failed to fetch links");
-      }
-      return response.json();
-    }
-  });
-
   // Stats for dashboard
   const totalLinks = links?.length || 0;
   const activeLinks = links?.filter((link: any) => link.active).length || 0;
 
-  const isLoading = isLoadingCompanyInfo || isLoadingLinks;
+  const isLoading = isLoadingCompanyInfo;
 
   if (isLoading) {
     return (

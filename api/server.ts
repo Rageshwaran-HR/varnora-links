@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
+  const requestPath = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
@@ -29,10 +29,10 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    if (requestPath.startsWith("/api")) {
+      let logLine = `${req.method} ${requestPath} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(0, 500)}`; // Limiting log size
       }
       if (logLine.length > 80) logLine = logLine.slice(0, 79) + "…";
       console.log(logLine);
@@ -43,12 +43,20 @@ app.use((req, res, next) => {
 });
 
 // Register routes
+// Ensure this function registers all API routes
 await registerRoutes(app);
 
 // Error handler
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const status = err.status || 500;
-  res.status(status).json({ message: err.message || "Internal Server Error" });
+  const errorMessage = process.env.NODE_ENV === 'development' ? err.stack : err.message;
+  res.status(status).json({ message: errorMessage });
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`API server is running on http://localhost:${PORT}`);
 });
 
 export default app;

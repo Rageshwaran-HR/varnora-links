@@ -445,6 +445,7 @@ async function registerRoutes(app2) {
 }
 
 // api/index.ts
+import serverless from "serverless-http";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 var app = express();
@@ -453,11 +454,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 await registerRoutes(app);
 app.use(express.static(path.join(__dirname, "..", "client", "dist")));
-var port = process.env.PORT || 5e3;
-var server = app.listen(port, () => {
-  console.log(`Express server running at http://localhost:${port}`);
-});
-var index_default = server;
+var handler = serverless(app);
 export {
-  index_default as default
+  handler
 };

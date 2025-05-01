@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
- "scripts": {
+  "scripts": {
     "dev": "concurrently \"cross-env NODE_ENV=development tsx --watch api/index.ts\" \"vite\"",
     "build": "vite build && esbuild api/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.ts",
