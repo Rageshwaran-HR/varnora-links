@@ -25,9 +25,9 @@ export default function DashboardPage() {
     data: companyInfo, 
     isLoading: isLoadingCompanyInfo,
   } = useQuery({
-    queryKey: ["/api/company-info"],
+    queryKey: ["/api/companys"],
     queryFn: async () => {
-      const response = await fetch("/api/company-info");
+      const response = await fetch("/api/companys");
       if (!response.ok) {
         throw new Error("Failed to fetch company info");
       }

@@ -24,14 +24,14 @@ export default function Home() {
   
   // Fetch company info data
   const { data: companyInfo } = useQuery<any>({
-    queryKey: ['/api/company-info'],
+    queryKey: ['/api/companys'],
     staleTime: 0,
   });
   
   // Invalidate queries when component mounts to ensure fresh data
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ['/api/links'] });
-    queryClient.invalidateQueries({ queryKey: ['/api/company-info'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/companys'] });
   }, []);
   
   // Animation variants

@@ -35,9 +35,9 @@ export default function CompanyInfoPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["/api/company-info"],
+    queryKey: ["/api/companys"],
     queryFn: async () => {
-      const response = await fetch("/api/company-info");
+      const response = await fetch("/api/companys");
       if (!response.ok) {
         throw new Error("Failed to fetch company info");
       }
@@ -63,11 +63,11 @@ export default function CompanyInfoPage() {
   // Update company info mutation
   const updateMutation = useMutation({
     mutationFn: async (data: CompanyInfoValues) => {
-      const res = await apiRequest("PUT", "/api/company-info", data);
+      const res = await apiRequest("PUT", "/api/companys", data);
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/company-info"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/companys"] });
       toast({
         title: "Company information updated",
         description: "Your changes have been saved successfully.",
@@ -111,7 +111,7 @@ export default function CompanyInfoPage() {
             <CardContent>
               <p>Failed to load company information. Please try again later.</p>
               <Button 
-                onClick={() => queryClient.invalidateQueries({ queryKey: ["/api/company-info"] })}
+                onClick={() => queryClient.invalidateQueries({ queryKey: ["/api/companys"] })}
                 className="mt-4"
               >
                 Retry

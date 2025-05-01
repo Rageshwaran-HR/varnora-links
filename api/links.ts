@@ -1,7 +1,7 @@
 // api/links.ts
 import express from "express";
 import { storage } from "../lib/storage.js";
-import { insertLinkSchema } from "../shared/schema.js";
+import { insertLinkSchema } from "./schema.js";
 import { ZodError } from "zod";
 
 const app = express();

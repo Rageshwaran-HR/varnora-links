@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "../lib/storage";
-import { insertLinkSchema, insertCompanyInfoSchema } from "../shared/schema";
+import { insertLinkSchema, insertCompanyInfoSchema } from "./schema.ts";
 import { ZodError } from "zod";
 import { setupAuth } from "./auth";
 
@@ -99,7 +99,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoints for company info
-  app.get("/api/company-info", async (req, res) => {
+  app.get("/api/companys", async (req, res) => {
     try {
       const info = await storage.getCompanyInfo();
       res.json(info);
@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/company-info", async (req, res) => {
+  app.put("/api/companys", async (req, res) => {
     // Check if user is authenticated
     if (!req.isAuthenticated()) {
       return res.status(401).json({ error: "Unauthorized" });
