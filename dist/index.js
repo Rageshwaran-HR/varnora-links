@@ -4,14 +4,8 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// api/index.ts
-import express from "express";
-import cors from "cors";
-import { fileURLToPath } from "url";
-import path from "path";
-
-// api/routes.ts
-import { createServer } from "http";
+// api/links.ts
+import { Router } from "express";
 
 // shared/schema.ts
 var schema_exports = {};
@@ -104,71 +98,6 @@ async function hashPassword(password) {
   const buf = await scryptAsync(password, salt, 64);
   return `${buf.toString("hex")}.${salt}`;
 }
-async function comparePasswords(supplied, stored) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = await scryptAsync(supplied, salt, 64);
-  return timingSafeEqual(hashedBuf, suppliedBuf);
-}
-function setupAuth(app2) {
-  const sessionSettings = {
-    secret: process.env.SESSION_SECRET || "varnora-session-secret",
-    resave: false,
-    saveUninitialized: false,
-    store: storage.sessionStore,
-    cookie: {
-      maxAge: 1e3 * 60 * 60 * 24,
-      // 1 day
-      secure: process.env.NODE_ENV === "production"
-    }
-  };
-  app2.set("trust proxy", 1);
-  app2.use(session(sessionSettings));
-  app2.use(passport.initialize());
-  app2.use(passport.session());
-  passport.use(
-    new LocalStrategy(async (username, password, done) => {
-      const user = await storage.getUserByUsername(username);
-      if (!user || !await comparePasswords(password, user.password)) {
-        return done(null, false);
-      } else {
-        return done(null, user);
-      }
-    })
-  );
-  passport.serializeUser((user, done) => done(null, user.id));
-  passport.deserializeUser(async (id, done) => {
-    const user = await storage.getUser(id);
-    done(null, user);
-  });
-  app2.post("/api/register", async (req, res, next) => {
-    const existingUser = await storage.getUserByUsername(req.body.username);
-    if (existingUser) {
-      return res.status(400).send("Username already exists");
-    }
-    const user = await storage.createUser({
-      ...req.body,
-      password: await hashPassword(req.body.password)
-    });
-    req.login(user, (err) => {
-      if (err) return next(err);
-      res.status(201).json(user);
-    });
-  });
-  app2.post("/api/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json(req.user);
-  });
-  app2.post("/api/logout", (req, res, next) => {
-    req.logout((err) => {
-      if (err) return next(err);
-      res.sendStatus(200);
-    });
-  });
-  app2.get("/api/user", (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
-    res.json(req.user);
-  });
-}
 
 // api/storage.ts
 import "dotenv/config";
@@ -182,7 +111,6 @@ var pool = new Pool({ connectionString: process.env.DATABASE_URL });
 var db = drizzle(pool, { schema: schema_exports });
 var PostgresSessionStore = connectPg(session2);
 var DatabaseStorage = class {
-  sessionStore;
   constructor() {
     this.sessionStore = new PostgresSessionStore({
       pool,
@@ -329,132 +257,106 @@ var DatabaseStorage = class {
 };
 var storage = new DatabaseStorage();
 
-// api/routes.ts
+// api/links.ts
 import { ZodError } from "zod";
-async function registerRoutes(app2) {
-  setupAuth(app2);
-  app2.get("/api/health", (req, res) => {
-    res.json({ status: "ok", time: (/* @__PURE__ */ new Date()).toISOString() });
-  });
-  app2.get("/api/links", async (req, res) => {
-    try {
-      const links2 = await storage.getLinks();
-      res.json(links2);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve links" });
+var router = Router();
+router.get("/", async (req, res) => {
+  try {
+    const links2 = await storage.getLinks();
+    res.json(links2);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve links" });
+  }
+});
+router.get("/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const link = await storage.getLink(id);
+    if (!link) {
+      return res.status(404).json({ error: "Link not found" });
     }
-  });
-  app2.get("/api/links/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const link = await storage.getLink(id);
-      if (!link) {
-        return res.status(404).json({ error: "Link not found" });
-      }
-      res.json(link);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve link" });
+    res.json(link);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve link" });
+  }
+});
+router.post("/", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  try {
+    const linkData = insertLinkSchema.parse(req.body);
+    const link = await storage.createLink(linkData);
+    res.status(201).json(link);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({ error: error.errors });
     }
-  });
-  app2.post("/api/links", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Unauthorized" });
+    res.status(500).json({ error: "Failed to create link" });
+  }
+});
+router.put("/:id", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  try {
+    const id = parseInt(req.params.id);
+    const link = await storage.getLink(id);
+    if (!link) {
+      return res.status(404).json({ error: "Link not found" });
     }
-    try {
-      const linkData = insertLinkSchema.parse(req.body);
-      const link = await storage.createLink(linkData);
-      res.status(201).json(link);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: error.errors });
-      }
-      res.status(500).json({ error: "Failed to create link" });
+    const updatedLink = await storage.updateLink(id, req.body);
+    res.json(updatedLink);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update link" });
+  }
+});
+router.delete("/:id", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  try {
+    const id = parseInt(req.params.id);
+    const success = await storage.deleteLink(id);
+    if (!success) {
+      return res.status(404).json({ error: "Link not found" });
     }
-  });
-  app2.put("/api/links/:id", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-    try {
-      const id = parseInt(req.params.id);
-      const link = await storage.getLink(id);
-      if (!link) {
-        return res.status(404).json({ error: "Link not found" });
-      }
-      const updatedLink = await storage.updateLink(id, req.body);
-      res.json(updatedLink);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update link" });
-    }
-  });
-  app2.delete("/api/links/:id", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-    try {
-      const id = parseInt(req.params.id);
-      const success = await storage.deleteLink(id);
-      if (!success) {
-        return res.status(404).json({ error: "Link not found" });
-      }
-      res.status(204).end();
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete link" });
-    }
-  });
-  app2.get("/api/company-info", async (req, res) => {
-    try {
-      const info = await storage.getCompanyInfo();
-      res.json(info);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve company info" });
-    }
-  });
-  app2.put("/api/company-info", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-    try {
-      const updatedInfo = await storage.updateCompanyInfo(req.body);
-      res.json(updatedInfo);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update company info" });
-    }
-  });
-  app2.get("/api/appearance", async (req, res) => {
-    try {
-      const settings = await storage.getAppearance();
-      res.json(settings);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve appearance settings" });
-    }
-  });
-  app2.put("/api/appearance", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-    try {
-      const updatedSettings = await storage.updateAppearance(req.body);
-      res.json(updatedSettings);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update appearance settings" });
-    }
-  });
-  const httpServer = createServer(app2);
-  return httpServer;
-}
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete link" });
+  }
+});
+var links_default = router;
+
+// api/company-info.ts
+import { Router as Router2 } from "express";
+var router2 = Router2();
+router2.get("/", async (req, res) => {
+  try {
+    const info = await storage.getCompanyInfo();
+    res.json(info);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve company info" });
+  }
+});
+router2.put("/", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  try {
+    const updatedInfo = await storage.updateCompanyInfo(req.body);
+    res.json(updatedInfo);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update company info" });
+  }
+});
+var company_info_default = router2;
 
 // api/index.ts
-import serverless from "serverless-http";
-var __filename = fileURLToPath(import.meta.url);
-var __dirname = path.dirname(__filename);
-var app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-await registerRoutes(app);
-app.use(express.static(path.join(__dirname, "..", "client", "dist")));
-var handler = serverless(app);
+async function registerRoutes(app) {
+  app.use("/api/links", links_default);
+  app.use("/api/company-info", company_info_default);
+}
 export {
-  handler
+  registerRoutes
 };

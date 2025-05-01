@@ -73,6 +73,7 @@
     "react-three-fiber": "^6.0.13",
     "recharts": "^2.15.2",
     "serverless-http": "^3.2.0",
+    "storage": "^0.2.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.176.0",
