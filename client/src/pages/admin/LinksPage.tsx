@@ -83,9 +83,9 @@ export default function LinksPage() {
 
   // Fetch links
   const { 
-    data: links, 
-    isLoading,
-    error
+    data: links = [], 
+    isLoading, 
+    error 
   } = useQuery({
     queryKey: ["/api/links"],
     queryFn: async () => {
@@ -96,6 +96,10 @@ export default function LinksPage() {
       return response.json();
     }
   });
+
+  const activeLinksCount = Array.isArray(links) 
+    ? links.filter((link: any) => link.active).length 
+    : 0;
 
   // Set up forms
   const addForm = useForm<LinkFormValues>({
@@ -471,10 +475,10 @@ export default function LinksPage() {
             </CardContent>
             <CardFooter className="border-t border-gray-800 pt-4 flex justify-between">
               <div className="text-sm text-gray-400">
-                Total links: {links ? links.length : 0}
+                Total links: {Array.isArray(links) ? links.length : 0}
               </div>
               <div className="text-sm text-gray-400">
-                Active links: {links ? links.filter((link: any) => link.active).length : 0}
+                Active links: {Array.isArray(links) ? links.filter((link: any) => link.active).length : 0}
               </div>
             </CardFooter>
           </Card>
