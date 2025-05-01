@@ -1,23 +1,22 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*", "client/tsconfig.json"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "include": ["api/**/*", "client/src/**/*", "shared/**/*"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
-    "noEmit": true,
+    "jsx": "react-jsx", // Enable JSX support
+    "target": "ES2020",
     "module": "ESNext",
+    "moduleResolution": "node",
     "strict": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "preserve",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "types": ["node", "vite/client"],
+
+    "baseUrl": "./",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@api/*": ["api/*"],
+      "@/*": ["client/src/*"],
+      "@shared/*": ["shared/*"],
+      "@assets/*": ["attached_assets/*"]
     }
   }
 }
