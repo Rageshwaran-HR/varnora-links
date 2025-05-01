@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "../lib/storage";
 import { insertLinkSchema, insertCompanyInfoSchema } from "../shared/schema";
 import { ZodError } from "zod";
 import { setupAuth } from "./auth";

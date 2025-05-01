@@ -1,9 +1,11 @@
-import { Router } from "express";
-import { storage } from "./storage";
-import { insertLinkSchema } from "../shared/schema";
+// api/links.ts
+import express from "express";
+import { storage } from "../lib/storage.js";
+import { insertLinkSchema } from "../shared/schema.js";
 import { ZodError } from "zod";
 
-const router = Router();
+const app = express();
+const router = express.Router();
 
 // Get all links
 router.get("/", async (req, res) => {
@@ -90,4 +92,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-export default router;
+// Use the router for handling requests
+app.use("/api/links", router);
+
+export default app;

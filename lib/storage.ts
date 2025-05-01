@@ -3,15 +3,15 @@ import {
   type User, type InsertUser, 
   type Link, type InsertLink,
   type CompanyInfo, type InsertCompanyInfo
-} from "../shared/schema";
+} from "../shared/schema.ts";
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import ws from "ws";
-import * as schema from "../shared/schema";
-import { hashPassword } from "./auth";
+import * as schema from "../shared/schema.ts";
+import { hashPassword } from "../api/auth.ts";
 import 'dotenv/config';
 
 neonConfig.webSocketConstructor = ws;
